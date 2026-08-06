@@ -24,6 +24,11 @@ foreach ($directories as $directory) {
     }
 }
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
-$app->useStoragePath($storagePath);
-$app->handleRequest(Request::capture());
+try {
+    $app = require_once __DIR__.'/../bootstrap/app.php';
+    $app->useStoragePath($storagePath);
+    $app->handleRequest(Request::capture());
+} catch (\Throwable $e) {
+    echo "<h1>Error on Vercel</h1>";
+    echo "<pre>" . (string) $e . "</pre>";
+}
