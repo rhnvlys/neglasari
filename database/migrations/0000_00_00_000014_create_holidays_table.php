@@ -21,6 +21,7 @@ return new class extends Migration
         });
         
         Schema::create('holiday_employee', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('holiday_id')->constrained()->cascadeOnDelete();
             $table->foreignId('employee_id')->constrained()->cascadeOnDelete();
             $table->unique(['holiday_id', 'employee_id']);
