@@ -25,27 +25,6 @@ Route::get('/health', function () {
     }
 });
 
-// Temporary debug route - REMOVE after verification
-Route::get('/debug-db', function () {
-    try {
-        $dbPath = config('database.connections.sqlite.database');
-        $users = \Illuminate\Support\Facades\DB::table('users')->select('id', 'username', 'email', 'name')->get();
-        $tables = \Illuminate\Support\Facades\DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
-        return response()->json([
-            'db_path' => $dbPath,
-            'db_exists' => file_exists($dbPath),
-            'db_size' => file_exists($dbPath) ? filesize($dbPath) : 0,
-            'source_exists' => file_exists(base_path('database/database.sqlite')),
-            'source_size' => file_exists(base_path('database/database.sqlite')) ? filesize(base_path('database/database.sqlite')) : 0,
-            'tables' => $tables,
-            'user_count' => $users->count(),
-            'users' => $users,
-        ]);
-    } catch (\Throwable $e) {
-        return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-    }
-});
-
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.post');
