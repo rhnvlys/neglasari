@@ -20,8 +20,40 @@ $directories = [
 
 foreach ($directories as $directory) {
     if (! is_dir($directory)) {
-        mkdir($directory, 0755, true);
+        @mkdir($directory, 0755, true);
     }
+}
+
+// Remove stale bootstrap cache if present
+foreach (['packages.php', 'services.php', 'config.php', 'routes.php'] as $cacheFile) {
+    $filePath = __DIR__.'/../bootstrap/cache/'.$cacheFile;
+    if (file_exists($filePath)) {
+        @unlink($filePath);
+    }
+}
+
+// Setup SQLite DB if DB_CONNECTION is sqlite or mysql host is invalid
+$dbConnection = getenv('DB_CONNECTION') ?: ($_ENV['DB_CONNECTION'] ?? 'sqlite');
+$dbHost = getenv('DB_HOST') ?: ($_ENV['DB_HOST'] ?? '');
+
+if ($dbConnection === 'sqlite' || empty($dbHost) || str_contains($dbHost, 'aivencloud.com')) {
+    $targetDb = '/tmp/database.sqlite';
+    $sourceDb = __DIR__ . '/../database/database.sqlite';
+
+    if (!file_exists($targetDb) || filesize($targetDb) === 0) {
+        if (file_exists($sourceDb)) {
+            @copy($sourceDb, $targetDb);
+        } else {
+            @touch($targetDb);
+        }
+    }
+
+    putenv("DB_CONNECTION=sqlite");
+    putenv("DB_DATABASE={$targetDb}");
+    $_ENV['DB_CONNECTION'] = 'sqlite';
+    $_ENV['DB_DATABASE'] = $targetDb;
+    $_SERVER['DB_CONNECTION'] = 'sqlite';
+    $_SERVER['DB_DATABASE'] = $targetDb;
 }
 
 try {
