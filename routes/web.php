@@ -31,9 +31,23 @@ Route::middleware('guest')->group(function () {
 });
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
+use App\Http\Controllers\PositionController;
+use App\Http\Controllers\WorkScheduleController;
+use App\Http\Controllers\OfficeLocationController;
+use App\Http\Controllers\HolidayController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\ActivityLogController;
+
 Route::middleware(['auth', 'active.user', 'role:Super Admin|Admin Desa'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
     Route::resource('employees', EmployeeController::class);
+    Route::resource('positions', PositionController::class);
+    Route::resource('schedules', WorkScheduleController::class);
+    Route::resource('locations', OfficeLocationController::class);
+    Route::resource('holidays', HolidayController::class);
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+    Route::get('/audit-logs', [ActivityLogController::class, 'index'])->name('audit-logs.index');
     Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
     Route::get('/attendances/export', [AttendanceController::class, 'export'])->name('attendances.export');
     Route::get('/attendances/{attendance}', [AttendanceController::class, 'show'])->name('attendances.show');
