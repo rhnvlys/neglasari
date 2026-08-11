@@ -80,7 +80,7 @@
                                         {{ $attendance->check_in_at->format('H:i') }}
                                     </div>
                                     <div class="text-xs text-neglasari-text-secondary">
-                                        {{ $attendance->check_in_location_status === 'inside_radius' ? 'Dalam Radius' : 'Luar Radius' }}
+                                        {{ ($attendance->check_in_location_status?->value ?? $attendance->check_in_location_status) === 'inside_radius' ? 'Dalam Radius' : 'Luar Radius' }}
                                     </div>
                                 @else
                                     <span class="text-gray-400">-</span>
@@ -92,19 +92,22 @@
                                         {{ $attendance->check_out_at->format('H:i') }}
                                     </div>
                                     <div class="text-xs text-neglasari-text-secondary">
-                                        {{ $attendance->check_out_status === 'normal' ? 'Normal' : ($attendance->check_out_status === 'early_leave' ? 'Pulang Awal' : 'Lembur') }}
+                                        {{ ($attendance->check_out_status?->value ?? $attendance->check_out_status) === 'normal' ? 'Normal' : (($attendance->check_out_status?->value ?? $attendance->check_out_status) === 'early_leave' ? 'Pulang Awal' : 'Lembur') }}
                                     </div>
                                 @else
                                     <span class="text-gray-400">-</span>
                                 @endif
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-sm">
+                                @php
+                                    $st = $attendance->attendance_status?->value ?? $attendance->attendance_status;
+                                @endphp
                                 <span class="px-2 py-1 text-xs font-semibold rounded-full {{
-                                    $attendance->attendance_status === 'present' ? 'bg-green-100 text-green-800' :
-                                    ($attendance->attendance_status === 'late' ? 'bg-yellow-100 text-yellow-800' :
-                                    ($attendance->attendance_status === 'absent' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'))
+                                    $st === 'present' ? 'bg-green-100 text-green-800' :
+                                    ($st === 'late' ? 'bg-yellow-100 text-yellow-800' :
+                                    ($st === 'absent' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'))
                                 }}">
-                                    {{ $attendance->attendance_status->label() }}
+                                    {{ is_object($attendance->attendance_status) ? $attendance->attendance_status->label() : $attendance->attendance_status }}
                                 </span>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-sm text-neglasari-text">
