@@ -14,9 +14,6 @@ class DemoEmployeeSeeder extends Seeder
 {
     public function run(): void
     {
-        if (app()->environment() !== 'local' && app()->environment() !== 'testing') {
-            return;
-        }
 
         $roles = [
             'admin' => ['Admin Desa', 'KAUR_TU'],

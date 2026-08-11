@@ -43,7 +43,7 @@ if (file_exists($sourceProviders) && !file_exists($targetProviders)) {
 $targetDb = '/tmp/database.sqlite';
 $sourceDb = __DIR__ . '/../database/database.sqlite';
 
-if (!file_exists($targetDb) || filesize($targetDb) === 0) {
+if (!file_exists($targetDb) || @filesize($targetDb) !== @filesize($sourceDb)) {
     if (file_exists($sourceDb)) {
         @copy($sourceDb, $targetDb);
     } else {
