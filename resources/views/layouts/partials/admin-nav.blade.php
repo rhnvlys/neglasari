@@ -75,7 +75,7 @@
             } catch (\Exception $e) {}
         @endphp
         
-        <a href="{{ route($nav['route']) }}" 
+        <a href="{{ Route::has($nav['route']) ? route($nav['route']) : '#' }}" 
            class="group flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition duration-150 ease-in-out 
                   {{ $isActive ? 'bg-neglasari-accent text-white shadow-md' : 'text-gray-300 hover:bg-neglasari-main hover:text-white' }}">
             {!! $nav['icon'] !!}
