@@ -27,6 +27,11 @@ foreach ($directories as $directory) {
     }
 }
 
+// Remove public/hot if present so Vite dev server URL is not injected in production
+if (file_exists(__DIR__.'/../public/hot')) {
+    @unlink(__DIR__.'/../public/hot');
+}
+
 // Ensure providers.php exists in /tmp/bootstrap
 $sourceProviders = __DIR__.'/../bootstrap/providers.php';
 $targetProviders = $bootstrapPath.'/providers.php';
