@@ -119,6 +119,36 @@
                 <label for="address" class="block text-sm font-semibold text-neglasari-text mb-1">Alamat</label>
                 <textarea name="address" id="address" rows="3" class="w-full px-3 py-2 border border-neglasari-border rounded-xl shadow-sm focus:outline-none focus:ring-neglasari-accent focus:border-neglasari-accent">{{ old('address', $employee->address) }}</textarea>
             </div>
+
+            <!-- Informasi Akun Login -->
+            <div class="border-t border-neglasari-border pt-6 mt-6">
+                <h3 class="text-lg font-bold text-neglasari-dark mb-4">Informasi Akun Akses Sistem (Opsi)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="username" class="block text-sm font-semibold text-neglasari-text mb-1">Username Login</label>
+                        <input type="text" name="username" id="username" value="{{ old('username', $employee->user?->username) }}" placeholder="Username" class="w-full px-3 py-2 border border-neglasari-border rounded-xl shadow-sm focus:outline-none focus:ring-neglasari-accent focus:border-neglasari-accent">
+                        @error('username')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-semibold text-neglasari-text mb-1">Password Baru (Kosongkan jika tak diubah)</label>
+                        <input type="password" name="password" id="password" placeholder="Isi untuk ubah password" class="w-full px-3 py-2 border border-neglasari-border rounded-xl shadow-sm focus:outline-none focus:ring-neglasari-accent focus:border-neglasari-accent">
+                    </div>
+
+                    <div>
+                        <label for="role" class="block text-sm font-semibold text-neglasari-text mb-1">Peran Akses (Role)</label>
+                        @php
+                            $currentRole = $employee->user?->hasRole('Admin') ? 'Admin' : 'Anggota';
+                        @endphp
+                        <select name="role" id="role" class="w-full px-3 py-2 border border-neglasari-border rounded-xl shadow-sm focus:outline-none focus:ring-neglasari-accent focus:border-neglasari-accent">
+                            <option value="Anggota" {{ old('role', $currentRole) === 'Anggota' ? 'selected' : '' }}>Anggota (Perangkat & Staf)</option>
+                            <option value="Admin" {{ old('role', $currentRole) === 'Admin' ? 'selected' : '' }}>Admin (Staff IT Desa)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             
             <div class="flex justify-end space-x-2">
                 <a href="{{ route('admin.employees.index') }}" class="px-6 py-2 bg-gray-200 text-neglasari-text font-semibold rounded-xl shadow-md hover:bg-gray-300 transition duration-150">

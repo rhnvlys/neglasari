@@ -10,15 +10,13 @@ class SuperAdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::firstOrCreate(['username' => 'superadmin'], [
-            'name' => 'Super Administrator',
-            'email' => 'admin@neglasari.desa.id',
+        $admin = User::updateOrCreate(['username' => 'superadmin'], [
+            'name' => 'Super Administrator IT Desa',
+            'email' => 'superadmin@neglasari.desa.id',
             'password' => Hash::make('password123'),
             'is_active' => true,
         ]);
         
-        if (!$admin->hasRole('Super Admin')) {
-            $admin->assignRole('Super Admin');
-        }
+        $admin->syncRoles(['Admin', 'Super Admin', 'Admin Desa']);
     }
 }

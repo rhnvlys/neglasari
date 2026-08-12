@@ -99,12 +99,14 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         
-        if ($user->hasRole('Super Admin') || $user->hasRole('Admin Desa')) {
+        if ($user->hasRole('Admin') || $user->hasRole('Super Admin') || $user->hasRole('Admin Desa')) {
             return redirect()->intended('/admin/dashboard');
+        } elseif ($user->hasRole('Anggota') || $user->hasRole('Pegawai')) {
+            return redirect()->intended('/anggota/dashboard');
         } elseif ($user->hasRole('Kepala Desa')) {
             return redirect()->intended('/kades/dashboard');
         } else {
-            return redirect()->intended('/pegawai/dashboard');
+            return redirect()->intended('/anggota/dashboard');
         }
     }
 }

@@ -12,7 +12,7 @@ class RolePermissionSeeder extends Seeder
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Admin Permissions
+        // System Permissions
         $permissions = [
             'access admin',
             'manage employees',
@@ -50,59 +50,37 @@ class RolePermissionSeeder extends Seeder
             Permission::firstOrCreate(['name' => $permission]);
         }
 
-        $superAdmin = Role::firstOrCreate(['name' => 'Super Admin']);
-        $superAdmin->givePermissionTo(Permission::all());
+        // Role 1: Admin (Staff IT Desa / Administrator)
+        $adminRole = Role::firstOrCreate(['name' => 'Admin']);
+        $adminRole->syncPermissions(Permission::all());
 
-        $admin = Role::firstOrCreate(['name' => 'Admin Desa']);
-        $admin->givePermissionTo([
-            'access admin',
-            'manage employees',
-            'manage positions',
-            'manage users',
-            'manage schedules',
-            'manage holidays',
-            'view attendances',
-            'correct attendances',
-            'process leave requests',
-            'view reports',
-            // Leave Request Permissions
-            'view all leave requests',
-            'approve leave requests',
-            'reject leave requests',
-            'view leave request attachments',
-            // Laporan
-            'view attendance reports',
-            'export attendance reports excel',
-            'export attendance reports pdf',
-            'print attendance reports',
-            'view attendance photos in reports',
-        ]);
-
-        $kepalaDesa = Role::firstOrCreate(['name' => 'Kepala Desa']);
-        $kepalaDesa->givePermissionTo([
-            'access admin',
-            'view attendances',
-            'process leave requests',
-            'view reports',
-            // Leave Request Permissions
-            'view all leave requests',
-            'approve leave requests',
-            'reject leave requests',
-            'view leave request attachments',
-            // Laporan
-            'view executive attendance reports',
-            'export attendance reports excel',
-            'export attendance reports pdf',
-            'print attendance reports',
-        ]);
-
-        $pegawai = Role::firstOrCreate(['name' => 'Pegawai']);
-        $pegawai->givePermissionTo([
+        // Role 2: Anggota (Perangkat Desa & Staf)
+        $anggotaRole = Role::firstOrCreate(['name' => 'Anggota']);
+        $anggotaRole->syncPermissions([
             'view own leave requests',
             'create leave requests',
             'cancel own leave requests',
             'view own attendance report',
             'export own attendance report',
         ]);
+
+        // Legacy compatibility aliases if needed by existing guards
+        $legacyRoles = [
+            'Super Admin' => Permission::all(),
+            'Admin Desa' => Permission::all(),
+            'Kepala Desa' => Permission::all(),
+            'Pegawai' => [
+                'view own leave requests',
+                'create leave requests',
+                'cancel own leave requests',
+                'view own attendance report',
+                'export own attendance report',
+            ]
+        ];
+
+        foreach ($legacyRoles as $roleName => $perms) {
+            $r = Role::firstOrCreate(['name' => $roleName]);
+            $r->syncPermissions($perms);
+        }
     }
 }

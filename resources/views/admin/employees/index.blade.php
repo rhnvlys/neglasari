@@ -6,20 +6,20 @@
 <div class="space-y-6">
     <div class="bg-white rounded-2xl shadow-lg p-6 border border-neglasari-border">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-            <h2 class="text-xl font-bold text-neglasari-dark">Data Perangkat Desa</h2>
+            <h2 class="text-xl font-bold text-neglasari-dark">Data Anggota & Perangkat Desa</h2>
             <a href="{{ route('admin.employees.create') }}" class="mt-4 md:mt-0 px-4 py-2 bg-neglasari-main text-white font-semibold rounded-xl shadow-md hover:bg-neglasari-accent transition duration-150 text-sm inline-flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
-                Tambah Pegawai
+                Tambah Anggota / Admin
             </a>
         </div>
         
         <form method="GET" action="{{ route('admin.employees.index') }}" class="mb-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <label for="search" class="block text-sm font-semibold text-neglasari-text mb-1">Cari Pegawai</label>
-                    <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Nama, NIP, atau NIK..." class="w-full px-3 py-2 border border-neglasari-border rounded-xl shadow-sm focus:outline-none focus:ring-neglasari-accent focus:border-neglasari-accent">
+                    <label for="search" class="block text-sm font-semibold text-neglasari-text mb-1">Cari Anggota</label>
+                    <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Nama, NIP, NIK, atau Username..." class="w-full px-3 py-2 border border-neglasari-border rounded-xl shadow-sm focus:outline-none focus:ring-neglasari-accent focus:border-neglasari-accent">
                 </div>
                 <div>
                     <label for="position_id" class="block text-sm font-semibold text-neglasari-text mb-1">Jabatan</label>
@@ -44,10 +44,10 @@
             <table class="min-w-full divide-y divide-neglasari-border">
                 <thead class="bg-neglasari-bg">
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-neglasari-text uppercase tracking-wider">Pegawai</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-neglasari-text uppercase tracking-wider">Nomor Pegawai</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-neglasari-text uppercase tracking-wider">Nama Lengkap</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-neglasari-text uppercase tracking-wider">NIPD / NIP</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-neglasari-text uppercase tracking-wider">Jabatan</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-neglasari-text uppercase tracking-wider">Kontak</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-neglasari-text uppercase tracking-wider">Peran (Role)</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-neglasari-text uppercase tracking-wider">Status</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-neglasari-text uppercase tracking-wider">Aksi</th>
                     </tr>
@@ -62,7 +62,7 @@
                                     </div>
                                     <div class="ml-4">
                                         <div class="text-sm font-semibold text-neglasari-text">{{ $employee->full_name }}</div>
-                                        <div class="text-xs text-neglasari-text-secondary">NIK: {{ $employee->nik ?? '-' }}</div>
+                                        <div class="text-xs text-neglasari-text-secondary">Username: {{ $employee->user?->username ?? '-' }}</div>
                                     </div>
                                 </div>
                             </td>
@@ -70,11 +70,14 @@
                                 {{ $employee->employee_number }}
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-sm text-neglasari-text">
-                                {{ $employee->position->name }}
+                                {{ $employee->position?->name ?? '-' }}
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-sm text-neglasari-text">
-                                <div>{{ $employee->phone ?? '-' }}</div>
-                                <div class="text-xs text-neglasari-text-secondary">{{ $employee->email ?? '-' }}</div>
+                                @if($employee->user?->hasRole('Admin') || $employee->user?->hasRole('Super Admin'))
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">Admin</span>
+                                @else
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Anggota</span>
+                                @endif
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">
                                 <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $employee->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
