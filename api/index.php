@@ -60,7 +60,7 @@ $envVars = [
     'APP_NAME' => 'SIAP Neglasari',
     'APP_ENV' => 'production',
     'APP_KEY' => 'base64:F1FdnJ57539kVNNfQR7L9+g4eVQMqUMzyjfi4LIbEs8=',
-    'APP_DEBUG' => 'true',
+    'APP_DEBUG' => 'false',
     'APP_URL' => 'https://neglasari-pi.vercel.app',
     'LOG_CHANNEL' => 'stderr',
     'SESSION_DRIVER' => 'cookie',
@@ -83,6 +83,7 @@ try {
     $app->useBootstrapPath($bootstrapPath);
     $app->handleRequest(Request::capture());
 } catch (\Throwable $e) {
-    echo "<h1>Error on Vercel</h1>";
-    echo "<pre>" . (string) $e . "</pre>";
+    error_log((string) $e);
+    http_response_code(500);
+    echo "<h1>500 Internal Server Error</h1><p>Terjadi kesalahan pada server. Silakan hubungi administrator.</p>";
 }
