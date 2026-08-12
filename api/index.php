@@ -44,7 +44,7 @@ $targetDb = '/tmp/database.sqlite';
 $sourceDb = __DIR__ . '/../database/database.sqlite';
 
 if (file_exists($sourceDb)) {
-    if (!file_exists($targetDb) || filesize($targetDb) !== filesize($sourceDb)) {
+    if (!file_exists($targetDb) || filesize($targetDb) !== filesize($sourceDb) || md5_file($targetDb) !== md5_file($sourceDb)) {
         @copy($sourceDb, $targetDb);
         @chmod($targetDb, 0666);
     }
