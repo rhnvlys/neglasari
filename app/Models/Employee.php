@@ -75,4 +75,9 @@ class Employee extends Model
     {
         return $this->belongsToMany(Holiday::class);
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 }
