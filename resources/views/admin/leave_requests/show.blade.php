@@ -2,7 +2,7 @@
 
 @section('title', 'Detail Pengajuan - SIAP Neglasari')
 
-@section('content')
+@section('admin-content')
 <div class="space-y-6 max-w-4xl mx-auto">
     <div class="flex items-center justify-between">
         <h1 class="text-2xl font-bold text-neglasari-dark">Detail Pengajuan Pegawai</h1>
