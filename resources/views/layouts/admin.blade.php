@@ -26,11 +26,9 @@
         <div class="hidden md:flex md:flex-shrink-0">
             <div class="flex flex-col w-64">
                 <div class="flex flex-col h-0 flex-1 bg-neglasari-dark">
-                    <div class="flex items-center h-16 px-4 bg-neglasari-main shadow-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-white mr-2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
-                        </svg>
-                        <span class="text-white font-extrabold tracking-wider text-lg">SIAP NEGLASARI</span>
+                    <div class="flex items-center h-16 px-4 bg-neglasari-main shadow-md space-x-3">
+                        <img src="{{ asset('images/logo-tasikmalaya.png') }}" alt="Logo Desa" class="h-9 w-auto object-contain">
+                        <span class="text-white font-extrabold tracking-wider text-base">SIAP NEGLASARI</span>
                     </div>
                     <div class="flex-1 flex flex-col overflow-y-auto">
                         <nav class="flex-1 px-2 py-4 space-y-1">
@@ -55,8 +53,9 @@
                     </button>
                 </div>
                 <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                    <div class="flex-shrink-0 flex items-center px-4">
-                        <span class="text-white font-extrabold tracking-wider text-lg">SIAP NEGLASARI</span>
+                    <div class="flex-shrink-0 flex items-center px-4 space-x-3">
+                        <img src="{{ asset('images/logo-tasikmalaya.png') }}" alt="Logo Desa" class="h-9 w-auto object-contain">
+                        <span class="text-white font-extrabold tracking-wider text-base">SIAP NEGLASARI</span>
                     </div>
                     <nav class="mt-5 px-2 space-y-1">
                         @include('layouts.partials.admin-nav')

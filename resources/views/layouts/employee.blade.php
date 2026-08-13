@@ -25,12 +25,8 @@
         <!-- Top Navbar (Desktop/Mobile Header) -->
         <header class="bg-white border-b border-neglasari-border sticky top-0 z-40">
             <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 bg-neglasari-main rounded-lg flex items-center justify-center text-white shadow">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
-                        </svg>
-                    </div>
+                <div class="flex items-center space-x-2.5">
+                    <img src="{{ asset('images/logo-tasikmalaya.png') }}" alt="Logo Desa" class="h-8 w-auto object-contain">
                     <span class="font-extrabold text-neglasari-dark tracking-wide">SIAP NEGLASARI</span>
                 </div>
                 <div class="flex items-center space-x-2">

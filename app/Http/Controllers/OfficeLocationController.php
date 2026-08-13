@@ -35,8 +35,8 @@ class OfficeLocationController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'address' => 'required|string|max:255',
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
             'radius_meters' => 'required|integer|min:1',
             'maximum_accuracy_meters' => 'required|integer|min:1',
             'requires_photo' => 'boolean',
@@ -45,6 +45,8 @@ class OfficeLocationController extends Controller
             'is_active' => 'boolean',
         ]);
 
+        $validated['latitude'] = $request->filled('latitude') ? $request->latitude : -7.164300;
+        $validated['longitude'] = $request->filled('longitude') ? $request->longitude : 108.083200;
         $validated['requires_photo'] = $request->has('requires_photo');
         $validated['allow_outside_radius'] = $request->has('allow_outside_radius');
         $validated['requires_outside_verification'] = $request->has('requires_outside_verification');
@@ -77,8 +79,8 @@ class OfficeLocationController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'address' => 'required|string|max:255',
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
             'radius_meters' => 'required|integer|min:1',
             'maximum_accuracy_meters' => 'required|integer|min:1',
             'requires_photo' => 'boolean',
@@ -88,6 +90,8 @@ class OfficeLocationController extends Controller
         ]);
 
         $oldValues = $location->toArray();
+        $validated['latitude'] = $request->filled('latitude') ? $request->latitude : ($location->latitude ?? -7.164300);
+        $validated['longitude'] = $request->filled('longitude') ? $request->longitude : ($location->longitude ?? 108.083200);
         $validated['requires_photo'] = $request->has('requires_photo');
         $validated['allow_outside_radius'] = $request->has('allow_outside_radius');
         $validated['requires_outside_verification'] = $request->has('requires_outside_verification');
