@@ -36,7 +36,7 @@ class LeaveRequestFlowTest extends TestCase
             'start_date' => now()->addDay()->toDateString(),
             'end_date' => now()->addDays(2)->toDateString(),
             'reason' => 'Keperluan keluarga',
-            'attachment' => UploadedFile::fake()->image('surat.jpg')
+            'attachment' => UploadedFile::fake()->create('surat.pdf', 100, 'application/pdf')
         ]);
 
         $response->assertRedirect(route('pegawai.leave-requests.index'));

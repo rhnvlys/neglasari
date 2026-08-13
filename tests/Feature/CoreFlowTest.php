@@ -46,7 +46,7 @@ class CoreFlowTest extends TestCase
             'latitude' => $office->latitude,
             'longitude' => $office->longitude,
             'accuracy' => 10,
-            'photo' => UploadedFile::fake()->image('selfie.jpg', 320, 320),
+            'photo' => UploadedFile::fake()->create('selfie.jpg', 10, 'image/jpeg'),
         ])->assertRedirect('/pegawai/absensi');
 
         $this->assertDatabaseHas('attendances', [
@@ -79,7 +79,7 @@ class CoreFlowTest extends TestCase
             'latitude' => -7.5,
             'longitude' => 108.5,
             'accuracy' => 10,
-            'photo' => UploadedFile::fake()->image('selfie.jpg', 320, 320),
+            'photo' => UploadedFile::fake()->create('selfie.jpg', 10, 'image/jpeg'),
         ])->assertRedirect('/pegawai/absensi/masuk')->assertSessionHasErrors('latitude');
 
         $this->assertDatabaseCount('attendances', 0);

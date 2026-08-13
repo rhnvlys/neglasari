@@ -74,6 +74,8 @@ class AttendanceReportTest extends TestCase
         $admin = $this->createUserWithRole('Admin Desa');
         $role = \Spatie\Permission\Models\Role::findByName('Admin Desa');
         $role->revokePermissionTo('export attendance reports pdf');
+        $role->revokePermissionTo('export own attendance report');
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
         $this->actingAs($admin)
             ->get(route('admin.reports.export', ['type' => 'daily', 'format' => 'pdf']))
