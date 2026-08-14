@@ -14,6 +14,13 @@ use App\Http\Controllers\WorkScheduleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        $user = auth()->user();
+        if ($user->hasRole(['Admin', 'Super Admin', 'Admin Desa'])) {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->route('anggota.dashboard');
+    }
     return redirect()->route('login');
 });
 
