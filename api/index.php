@@ -82,6 +82,10 @@ foreach ($envVars as $key => $val) {
     $_SERVER[$key] = $val;
 }
 
+$_SERVER['HTTPS'] = 'on';
+$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+$_SERVER['HTTP_X_FORWARDED_PORT'] = '443';
+
 try {
     $app = require_once __DIR__.'/../bootstrap/app.php';
     $app->useStoragePath($storagePath);
