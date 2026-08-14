@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if ($this->app->isProduction() || request()->header('x-forwarded-proto') === 'https' || str_contains(request()->header('host', ''), 'vercel.app')) {
+        if ($this->app->isProduction() || (request()->header('x-forwarded-proto') === 'https') || str_contains(request()->header('host', ''), 'vercel.app')) {
             URL::forceScheme('https');
         }
     }
