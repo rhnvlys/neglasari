@@ -74,11 +74,13 @@ class EmployeeController extends Controller
         DB::beginTransaction();
         
         try {
-            $employee = Employee::create($request->only([
+            $employeeData = $request->only([
                 'employee_number', 'nik', 'full_name', 'gender', 'birth_place',
                 'birth_date', 'position_id', 'phone', 'email', 'address', 'joined_at',
-                'employment_status', 'is_active'
-            ]));
+                'employment_status'
+            ]);
+            $employeeData['is_active'] = $request->boolean('is_active', true);
+            $employee = Employee::create($employeeData);
 
             if ($request->filled('username')) {
                 $role = $request->input('role', 'Anggota');
@@ -166,11 +168,13 @@ class EmployeeController extends Controller
         
         try {
             $oldValues = $employee->getOriginal();
-            $employee->update($request->only([
+            $employeeData = $request->only([
                 'employee_number', 'nik', 'full_name', 'gender', 'birth_place',
                 'birth_date', 'position_id', 'phone', 'email', 'address', 'joined_at',
-                'employment_status', 'is_active'
-            ]));
+                'employment_status'
+            ]);
+            $employeeData['is_active'] = $request->boolean('is_active', true);
+            $employee->update($employeeData);
 
             if ($request->filled('username')) {
                 $role = $request->input('role', 'Anggota');
