@@ -13,7 +13,9 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\WorkScheduleController;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/login');
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
 Route::get('/health', function () {
     try {
