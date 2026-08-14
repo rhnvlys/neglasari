@@ -22,11 +22,11 @@
                 <!-- Card Upload Logo -->
                 <div class="bg-neglasari-bg/50 p-4 rounded-2xl border border-neglasari-border flex flex-col sm:flex-row items-center gap-4">
                     <div class="w-24 h-24 bg-white rounded-xl p-2 border border-neglasari-border flex items-center justify-center shadow-sm flex-shrink-0">
-                        <img src="{{ asset('images/logo-tasikmalaya.png') }}?v={{ time() }}" alt="Logo Instansi Current" class="max-h-full max-w-full object-contain">
+                        <img src="{{ $appLogo }}" id="logoPreview" alt="Logo Instansi Current" class="max-h-full max-w-full object-contain">
                     </div>
                     <div class="space-y-2 text-center sm:text-left flex-1">
                         <label for="logo" class="block text-sm font-semibold text-neglasari-text">Upload Logo Instansi / Desa Baru</label>
-                        <input type="file" name="logo" id="logo" accept="image/png,image/jpeg,image/svg+xml" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-neglasari-main file:text-white hover:file:bg-neglasari-accent cursor-pointer">
+                        <input type="file" name="logo" id="logo" accept="image/png,image/jpeg,image/svg+xml" onchange="previewLogo(event)" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-neglasari-main file:text-white hover:file:bg-neglasari-accent cursor-pointer">
                         <p class="text-[11px] text-neglasari-text-secondary">Format: PNG, JPG, SVG. Maksimal 2 MB. Logo otomatis diperbarui di seluruh sistem.</p>
                         @error('logo') <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
                     </div>
@@ -87,4 +87,18 @@
         </form>
     </div>
 </div>
+@push('scripts')
+<script>
+    function previewLogo(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('logoPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+@endpush
 @endsection

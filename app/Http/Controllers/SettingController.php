@@ -25,25 +25,26 @@ class SettingController extends Controller
         try {
             if ($request->hasFile('logo')) {
                 $file = $request->file('logo');
-                $filename = 'logo-tasikmalaya.png';
-                $destinationPath = public_path('images');
+                $mime = $file->getMimeType() ?: 'image/png';
+                $base64 = base64_encode(file_get_contents($file->getRealPath()));
+                $logoUri = "data:{$mime};base64,{$base64}";
 
-                if (!file_exists($destinationPath)) {
-                    @mkdir($destinationPath, 0755, true);
-                }
-
+                // Also attempt local copy if directory writable
                 try {
+                    $filename = 'logo-tasikmalaya.png';
+                    $destinationPath = public_path('images');
+                    if (!file_exists($destinationPath)) {
+                        @mkdir($destinationPath, 0755, true);
+                    }
                     $file->move($destinationPath, $filename);
                 } catch (\Throwable $e) {
-                    Log::warning('Could not write logo to public_path, saving to storage: ' . $e->getMessage());
-                    @mkdir(storage_path('app/public/images'), 0755, true);
-                    @copy($file->getRealPath(), storage_path('app/public/images/' . $filename));
+                    Log::info('Local logo save skipped: ' . $e->getMessage());
                 }
 
                 Setting::updateOrCreate(
                     ['key' => 'app_logo'],
                     [
-                        'value' => 'images/' . $filename,
+                        'value' => $logoUri,
                         'group' => 'general',
                         'type' => 'string',
                         'is_public' => true,

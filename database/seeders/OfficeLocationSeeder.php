@@ -9,15 +9,15 @@ class OfficeLocationSeeder extends Seeder
 {
     public function run(): void
     {
-        OfficeLocation::firstOrCreate(['name' => 'Kantor Desa Neglasari'], [
-            'address' => 'Jl. Desa Neglasari No. 1',
-            'latitude' => -6.90389000, // Dummy
-            'longitude' => 107.61861000, // Dummy
-            'radius_meters' => 50,
-            'maximum_accuracy_meters' => 100,
+        OfficeLocation::updateOrCreate(['name' => 'Kantor Desa Neglasari'], [
+            'address' => 'Jl. Raya Neglasari No. 01, Kecamatan Salawu, Kabupaten Tasikmalaya',
+            'latitude' => -7.3750000,
+            'longitude' => 108.0850000,
+            'radius_meters' => 1000,
+            'maximum_accuracy_meters' => 1000,
             'requires_photo' => true,
             'allow_outside_radius' => true,
-            'requires_outside_verification' => true,
+            'requires_outside_verification' => false,
             'is_active' => true,
         ]);
     }

@@ -100,6 +100,15 @@ class AttendanceController extends Controller
                 throw ValidationException::withMessages(['attendance' => 'Anda sudah melakukan absen masuk hari ini.']);
             }
 
+            $photoPath = null;
+            try {
+                $photoPath = $request->file('photo')->store('attendance/check-in', config('filesystems.default'));
+            } catch (\Throwable $e) {
+                $mime = $request->file('photo')->getMimeType() ?: 'image/jpeg';
+                $data = base64_encode(file_get_contents($request->file('photo')->getRealPath()));
+                $photoPath = "data:{$mime};base64,{$data}";
+            }
+
             $attendance = Attendance::create([
                 'employee_id' => $employee->id,
                 'attendance_date' => $now->toDateString(),
@@ -110,7 +119,7 @@ class AttendanceController extends Controller
                 'check_in_longitude' => $data['longitude'],
                 'check_in_accuracy' => $data['accuracy'],
                 'check_in_distance' => round($distance, 2),
-                'check_in_photo_path' => $request->file('photo')->store('attendance/check-in', config('filesystems.default')),
+                'check_in_photo_path' => $photoPath,
                 'attendance_status' => $lateMinutes > 0 ? AttendanceStatus::LATE : AttendanceStatus::PRESENT,
                 'check_in_location_status' => $distance <= $office->radius_meters ? LocationStatus::INSIDE_RADIUS : LocationStatus::OUTSIDE_RADIUS,
                 'late_minutes' => $lateMinutes,
@@ -149,13 +158,22 @@ class AttendanceController extends Controller
             if ($attendance->check_out_at) {
                 throw ValidationException::withMessages(['attendance' => 'Anda sudah melakukan absen pulang hari ini.']);
             }
+            $photoPath = null;
+            try {
+                $photoPath = $request->file('photo')->store('attendance/check-out', config('filesystems.default'));
+            } catch (\Throwable $e) {
+                $mime = $request->file('photo')->getMimeType() ?: 'image/jpeg';
+                $data = base64_encode(file_get_contents($request->file('photo')->getRealPath()));
+                $photoPath = "data:{$mime};base64,{$data}";
+            }
+
             $attendance->update([
                 'check_out_at' => $now,
                 'check_out_latitude' => $data['latitude'],
                 'check_out_longitude' => $data['longitude'],
                 'check_out_accuracy' => $data['accuracy'],
                 'check_out_distance' => round($distance, 2),
-                'check_out_photo_path' => $request->file('photo')->store('attendance/check-out', config('filesystems.default')),
+                'check_out_photo_path' => $photoPath,
                 'check_out_location_status' => $distance <= $office->radius_meters ? LocationStatus::INSIDE_RADIUS : LocationStatus::OUTSIDE_RADIUS,
                 'check_out_status' => $earlyMinutes > 0 ? CheckOutStatus::EARLY_LEAVE : ($now->greaterThan($scheduledCheckout) ? CheckOutStatus::OVERTIME : CheckOutStatus::NORMAL),
                 'early_leave_minutes' => $earlyMinutes,
@@ -212,35 +230,68 @@ class AttendanceController extends Controller
         return $request->validate([
             'latitude' => ['required', 'numeric', 'between:-90,90'],
             'longitude' => ['required', 'numeric', 'between:-180,180'],
-            'accuracy' => ['required', 'numeric', 'min:0', 'max:10000'],
-            'photo' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'accuracy' => ['required', 'numeric', 'min:0'],
+            'photo' => ['required', 'file', 'max:10240'],
         ]);
     }
 
     private function validateLocation(array $data, OfficeLocation $office, float $distance): void
     {
         $errors = [];
-        if ($data['accuracy'] > $office->maximum_accuracy_meters) $errors['accuracy'] = 'Akurasi GPS terlalu rendah. Coba di area terbuka.';
-        if ($distance > $office->radius_meters && ! $office->allow_outside_radius) $errors['latitude'] = 'Anda berada di luar radius absensi yang diizinkan.';
-        if ($errors) throw ValidationException::withMessages($errors);
+        $maxAllowedAccuracy = max((float)$office->maximum_accuracy_meters, 1000.0);
+        if ($data['accuracy'] > $maxAllowedAccuracy) {
+            $errors['accuracy'] = 'Akurasi GPS terlalu rendah (' . round($data['accuracy']) . 'm). Aktifkan GPS lokasi presisi tinggi pada HP Anda.';
+        }
+        if ($distance > $office->radius_meters && ! $office->allow_outside_radius) {
+            $errors['latitude'] = 'Posisi Anda (' . round($distance) . 'm) berada di luar radius absensi (' . $office->radius_meters . 'm).';
+        }
+        if ($errors) {
+            throw ValidationException::withMessages($errors);
+        }
     }
 
     private function employee(): Employee
     {
-        return Auth::user()->employee ?? abort(403, 'Akun tidak terhubung dengan data pegawai.');
+        return Auth::user()->employee ?? abort(403, 'Akun Anda belum terhubung dengan data anggota/pegawai.');
     }
 
     private function officeLocation(): OfficeLocation
     {
-        return OfficeLocation::where('is_active', true)->first() ?? abort(503, 'Lokasi kantor belum dikonfigurasi.');
+        return OfficeLocation::where('is_active', true)->first()
+            ?? OfficeLocation::updateOrCreate(['name' => 'Kantor Desa Neglasari'], [
+                'address' => 'Jl. Raya Neglasari No. 01, Kecamatan Salawu, Kabupaten Tasikmalaya',
+                'latitude' => -7.3750000,
+                'longitude' => 108.0850000,
+                'radius_meters' => 1000,
+                'maximum_accuracy_meters' => 1000,
+                'requires_photo' => true,
+                'allow_outside_radius' => true,
+                'requires_outside_verification' => false,
+                'is_active' => true,
+            ]);
     }
 
     private function schedule(Employee $employee): WorkSchedule
     {
-        $day = now()->dayOfWeek;
-        return $employee->workSchedules()->where('day_of_week', $day)->where('is_active', true)->first()
-            ?? WorkSchedule::where('day_of_week', $day)->where('is_default', true)->where('is_active', true)->first()
-            ?? abort(422, 'Jadwal kerja hari ini belum dikonfigurasi.');
+        $dayIso = (string) now()->dayOfWeekIso;
+        $dayName = now()->locale('id')->translatedFormat('l');
+
+        return $employee->workSchedules()->where('day_of_week', $dayIso)->where('is_active', true)->first()
+            ?? WorkSchedule::where('day_of_week', $dayIso)->where('is_default', true)->where('is_active', true)->first()
+            ?? WorkSchedule::where('is_active', true)->first()
+            ?? WorkSchedule::updateOrCreate(['day_of_week' => $dayIso], [
+                'name' => "Reguler - $dayName",
+                'check_in_start' => '06:00:00',
+                'check_in_time' => '08:00:00',
+                'check_in_end' => '10:00:00',
+                'late_tolerance_minutes' => 15,
+                'check_out_start' => '15:00:00',
+                'check_out_time' => '16:00:00',
+                'check_out_end' => '20:00:00',
+                'is_workday' => true,
+                'is_default' => true,
+                'is_active' => true,
+            ]);
     }
 
     private function todayAttendance(): Attendance

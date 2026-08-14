@@ -5,11 +5,10 @@
 @section('content')
 <div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-        <!-- Logo Resmi Desa Neglasari / Kabupaten -->
         <div class="flex justify-center flex-col items-center">
-            <img src="{{ asset('images/logo-tasikmalaya.png') }}" alt="Logo Resmi Pemdes Neglasari" class="h-20 w-auto mb-3 object-contain filter drop-shadow-md">
+            <img src="{{ $appLogo }}" alt="Logo Resmi Pemdes Neglasari" class="h-20 w-auto mb-3 object-contain filter drop-shadow-md">
             <h2 class="text-center text-3xl font-extrabold text-neglasari-dark">
-                SIAP NEGLASARI
+                {{ $appName ?? 'SIAP NEGLASARI' }}
             </h2>
             <p class="mt-1 text-center text-sm font-medium text-neglasari-text-secondary">
                 Sistem Informasi Absensi Perangkat Desa
@@ -67,7 +66,7 @@
             
             <div class="mt-6 border-t border-neglasari-border pt-4 text-center">
                 <p class="text-xs text-neglasari-text-secondary">
-                    Gunakan kredensial pengujian lokal (misal: username <code class="bg-gray-100 px-1 py-0.5 rounded text-neglasari-accent font-semibold">admin</code>, <code class="bg-gray-100 px-1 py-0.5 rounded text-neglasari-accent font-semibold">kades</code>, <code class="bg-gray-100 px-1 py-0.5 rounded text-neglasari-accent font-semibold">pegawai</code> dengan password <code class="bg-gray-100 px-1 py-0.5 rounded text-neglasari-accent font-semibold">password123</code>).
+                    Gunakan akun Admin (<code class="bg-gray-100 px-1 py-0.5 rounded text-neglasari-accent font-semibold">admin</code>) atau Anggota (<code class="bg-gray-100 px-1 py-0.5 rounded text-neglasari-accent font-semibold">nandang</code>) dengan password <code class="bg-gray-100 px-1 py-0.5 rounded text-neglasari-accent font-semibold">password123</code>.
                 </p>
             </div>
         </div>

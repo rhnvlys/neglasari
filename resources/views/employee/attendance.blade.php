@@ -76,29 +76,23 @@
     </div>
 
     <div class="bg-white rounded-2xl shadow-lg p-6 border border-neglasari-border">
-        <h2 class="text-lg font-bold text-neglasari-dark mb-4">Riwayat Absen Bulan Ini</h2>
+        <h2 class="text-lg font-bold text-neglasari-dark mb-4">Riwayat Absensi Bulan Ini</h2>
         <div class="space-y-3">
             @forelse($monthlyAttendances as $att)
-                <div class="flex items-center justify-between p-3 bg-neglasari-bg rounded-xl">
+                <div class="flex items-center justify-between p-3.5 bg-neglasari-bg/60 rounded-xl border border-neglasari-border/50">
                     <div>
-                        <p class="text-sm font-semibold text-neglasari-text">{{ $att->attendance_date->format('d M Y') }}</p>
-                        <p class="text-xs text-neglasari-text-secondary">{{ $att->attendance_status->label() }}</p>
+                        <p class="text-xs font-bold text-neglasari-dark">{{ $att->attendance_date->locale('id')->translatedFormat('d F Y') }}</p>
+                        <span class="inline-block mt-1 px-2.5 py-0.5 text-[11px] font-bold rounded-full bg-neglasari-main/10 text-neglasari-main">
+                            {{ $att->attendance_status->label() }}
+                        </span>
                     </div>
-                    <div class="text-right">
-                        @if($att->check_in_at)
-                            <p class="text-xs text-neglasari-text">{{ $att->check_in_at->format('H:i') }}</p>
-                        @else
-                            <p class="text-xs text-gray-400">-</p>
-                        @endif
-                        @if($att->check_out_at)
-                            <p class="text-xs text-neglasari-text">{{ $att->check_out_at->format('H:i') }}</p>
-                        @else
-                            <p class="text-xs text-gray-400">-</p>
-                        @endif
+                    <div class="text-right text-xs space-y-0.5">
+                        <p class="text-gray-700"><span class="font-semibold text-gray-500">Masuk:</span> {{ $att->check_in_at ? $att->check_in_at->format('H:i') : '-' }}</p>
+                        <p class="text-gray-700"><span class="font-semibold text-gray-500">Pulang:</span> {{ $att->check_out_at ? $att->check_out_at->format('H:i') : '-' }}</p>
                     </div>
                 </div>
             @empty
-                <p class="text-sm text-neglasari-text-secondary text-center py-4">Tidak ada riwayat absen bulan ini.</p>
+                <p class="text-xs text-neglasari-text-secondary text-center py-4">Belum ada riwayat absensi bulan ini.</p>
             @endforelse
         </div>
     </div>
@@ -106,46 +100,46 @@
 
 @push('scripts')
 <script>
-    document.addEventListener('alpine:init', () => {
+    document.addEventListener('DOMContentLoaded', () => {
         const officeLocation = @json($officeLocation);
         const todayAttendance = @json($attendance);
         
-        const map = L.map('map').setView([officeLocation.latitude, officeLocation.longitude], 17);
+        const map = L.map('map').setView([officeLocation.latitude, officeLocation.longitude], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution: '&copy; OpenStreetMap'
         }).addTo(map);
         
-        const officeMarker = L.marker([officeLocation.latitude, officeLocation.longitude]).addTo(map)
+        L.marker([officeLocation.latitude, officeLocation.longitude]).addTo(map)
             .bindPopup('<b>Kantor Desa</b><br>' + officeLocation.name);
         
         const officeCircle = L.circle([officeLocation.latitude, officeLocation.longitude], {
             color: '#1F5D42',
             fillColor: '#1F5D42',
-            fillOpacity: 0.1,
-            radius: officeLocation.radius_meters
+            fillOpacity: 0.15,
+            radius: officeLocation.radius_meters || 1000
         }).addTo(map);
         
         if (todayAttendance) {
             if (todayAttendance.check_in_latitude && todayAttendance.check_in_longitude) {
                 L.marker([todayAttendance.check_in_latitude, todayAttendance.check_in_longitude], {
                     icon: L.divIcon({
-                        className: 'text-green-500',
-                        html: '✓',
+                        className: 'text-green-600 font-bold text-xl',
+                        html: '📍',
                         iconSize: [24, 24]
                     })
                 }).addTo(map)
-                .bindPopup('<b>Absen Masuk</b><br>' + new Date(todayAttendance.check_in_at).toLocaleTimeString());
+                .bindPopup('<b>Absen Masuk</b><br>' + (todayAttendance.check_in_at ? new Date(todayAttendance.check_in_at).toLocaleTimeString() : ''));
             }
             
             if (todayAttendance.check_out_latitude && todayAttendance.check_out_longitude) {
                 L.marker([todayAttendance.check_out_latitude, todayAttendance.check_out_longitude], {
                     icon: L.divIcon({
-                        className: 'text-red-500',
-                        html: '✗',
+                        className: 'text-red-600 font-bold text-xl',
+                        html: '🏁',
                         iconSize: [24, 24]
                     })
                 }).addTo(map)
-                .bindPopup('<b>Absen Pulang</b><br>' + new Date(todayAttendance.check_out_at).toLocaleTimeString());
+                .bindPopup('<b>Absen Pulang</b><br>' + (todayAttendance.check_out_at ? new Date(todayAttendance.check_out_at).toLocaleTimeString() : ''));
             }
         }
         

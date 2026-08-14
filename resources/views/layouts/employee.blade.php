@@ -26,7 +26,7 @@
         <header class="bg-white border-b border-neglasari-border sticky top-0 z-40">
             <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
-                    <img src="{{ asset('images/logo-tasikmalaya.png') }}" alt="Logo Desa" class="h-8 w-auto object-contain">
+                    <img src="{{ $appLogo }}" alt="Logo Desa" class="h-8 w-auto object-contain">
                     <span class="font-extrabold text-neglasari-dark tracking-wide">SIAP NEGLASARI</span>
                 </div>
                 <div class="flex items-center space-x-2">

@@ -9,15 +9,21 @@ class WorkScheduleSeeder extends Seeder
 {
     public function run(): void
     {
-        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+        $weekdays = [
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+        ];
         
-        foreach ($days as $day) {
-            $isFriday = $day === 'Friday';
+        foreach ($weekdays as $dayNum => $dayName) {
+            $isFriday = $dayNum === 5;
             
-            WorkSchedule::firstOrCreate([
-                'name' => "Reguler - $day",
-                'day_of_week' => $day,
+            WorkSchedule::updateOrCreate([
+                'day_of_week' => (string) $dayNum,
             ], [
+                'name' => "Reguler - $dayName",
                 'check_in_start' => '06:00:00',
                 'check_in_time' => '08:00:00',
                 'check_in_end' => '10:00:00',
@@ -31,12 +37,15 @@ class WorkScheduleSeeder extends Seeder
             ]);
         }
         
-        $weekend = ['Saturday', 'Sunday'];
-        foreach ($weekend as $day) {
-            WorkSchedule::firstOrCreate([
-                'name' => "Libur - $day",
-                'day_of_week' => $day,
+        $weekend = [
+            6 => 'Sabtu',
+            7 => 'Minggu',
+        ];
+        foreach ($weekend as $dayNum => $dayName) {
+            WorkSchedule::updateOrCreate([
+                'day_of_week' => (string) $dayNum,
             ], [
+                'name' => "Libur - $dayName",
                 'check_in_start' => '00:00:00',
                 'check_in_time' => '00:00:00',
                 'check_in_end' => '00:00:00',

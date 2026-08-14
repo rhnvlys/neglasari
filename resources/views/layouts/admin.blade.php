@@ -27,7 +27,7 @@
             <div class="flex flex-col w-64">
                 <div class="flex flex-col h-0 flex-1 bg-neglasari-dark">
                     <div class="flex items-center h-16 px-4 bg-neglasari-main shadow-md space-x-3">
-                        <img src="{{ asset('images/logo-tasikmalaya.png') }}" alt="Logo Desa" class="h-9 w-auto object-contain">
+                        <img src="{{ $appLogo }}" alt="Logo Desa" class="h-9 w-auto object-contain">
                         <span class="text-white font-extrabold tracking-wider text-base">SIAP NEGLASARI</span>
                     </div>
                     <div class="flex-1 flex flex-col overflow-y-auto">
@@ -54,7 +54,7 @@
                 </div>
                 <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                     <div class="flex-shrink-0 flex items-center px-4 space-x-3">
-                        <img src="{{ asset('images/logo-tasikmalaya.png') }}" alt="Logo Desa" class="h-9 w-auto object-contain">
+                        <img src="{{ $appLogo }}" alt="Logo Desa" class="h-9 w-auto object-contain">
                         <span class="text-white font-extrabold tracking-wider text-base">SIAP NEGLASARI</span>
                     </div>
                     <nav class="mt-5 px-2 space-y-1">
