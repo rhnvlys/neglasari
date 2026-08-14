@@ -55,7 +55,7 @@ if (file_exists($sourceDb)) {
     }
 }
 
-// Explicit environment variables for Vercel
+// Explicit environment variables for Vercel (Persistent Neon PostgreSQL)
 $envVars = [
     'APP_NAME' => 'SIAP Neglasari',
     'APP_ENV' => 'production',
@@ -67,8 +67,13 @@ $envVars = [
     'CACHE_STORE' => 'array',
     'QUEUE_CONNECTION' => 'sync',
     'FILESYSTEM_DISK' => 'public',
-    'DB_CONNECTION' => 'sqlite',
-    'DB_DATABASE' => $targetDb,
+    'DB_CONNECTION' => 'pgsql',
+    'DB_HOST' => 'ep-floral-scene-a1rqez3z.ap-southeast-1.aws.neon.tech',
+    'DB_PORT' => '5432',
+    'DB_DATABASE' => 'neondb',
+    'DB_USERNAME' => 'neondb_owner',
+    'DB_PASSWORD' => 'npg_hn6GpHD2EUaA',
+    'DB_SSLMODE' => 'require',
 ];
 
 foreach ($envVars as $key => $val) {

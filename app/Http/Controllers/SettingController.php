@@ -17,25 +17,45 @@ class SettingController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'settings' => 'required|array',
+            'settings' => 'nullable|array',
+            'logo' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
         ]);
 
-        foreach ($request->settings as $key => $value) {
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $filename = 'logo-tasikmalaya.png';
+            $destinationPath = public_path('images');
+
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            $file->move($destinationPath, $filename);
+
             Setting::updateOrCreate(
-                ['key' => $key],
-                ['value' => is_array($value) ? json_encode($value) : $value]
+                ['key' => 'app_logo'],
+                ['value' => 'images/' . $filename]
             );
+        }
+
+        if ($request->filled('settings')) {
+            foreach ($request->settings as $key => $value) {
+                Setting::updateOrCreate(
+                    ['key' => $key],
+                    ['value' => is_array($value) ? json_encode($value) : $value]
+                );
+            }
         }
 
         ActivityLog::create([
             'user_id' => auth()->id(),
             'action' => 'UPDATE',
             'module' => 'SETTINGS',
-            'description' => 'Mengubah pengaturan sistem',
+            'description' => 'Mengubah pengaturan sistem dan memperbarui logo instansi',
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
         ]);
 
-        return redirect()->route('admin.settings.index')->with('success', 'Pengaturan sistem berhasil disimpan.');
+        return redirect()->route('admin.settings.index')->with('success', 'Pengaturan sistem & logo berhasil diperbarui.');
     }
 }
