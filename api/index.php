@@ -60,7 +60,7 @@ $envVars = [
     'APP_NAME' => 'SIAP Neglasari',
     'APP_ENV' => 'production',
     'APP_KEY' => 'base64:F1FdnJ57539kVNNfQR7L9+g4eVQMqUMzyjfi4LIbEs8=',
-    'APP_DEBUG' => 'true',
+    'APP_DEBUG' => 'false',
     'APP_URL' => 'https://neglasari-pi.vercel.app',
     'LOG_CHANNEL' => 'stderr',
     'SESSION_DRIVER' => 'cookie',
