@@ -10,11 +10,11 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('group');
+            $table->string('group')->default('general');
             $table->string('key')->unique();
             $table->text('value')->nullable();
-            $table->string('type');
-            $table->boolean('is_public')->default(false);
+            $table->string('type')->default('string');
+            $table->boolean('is_public')->default(true);
             $table->timestamps();
         });
     }
