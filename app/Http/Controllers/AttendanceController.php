@@ -101,12 +101,11 @@ class AttendanceController extends Controller
             }
 
             $photoPath = null;
-            try {
-                $photoPath = $request->file('photo')->store('attendance/check-in', config('filesystems.default'));
-            } catch (\Throwable $e) {
-                $mime = $request->file('photo')->getMimeType() ?: 'image/jpeg';
-                $data = base64_encode(file_get_contents($request->file('photo')->getRealPath()));
-                $photoPath = "data:{$mime};base64,{$data}";
+            if ($request->hasFile('photo')) {
+                $file = $request->file('photo');
+                $mime = $file->getMimeType() ?: 'image/jpeg';
+                $encoded = base64_encode(file_get_contents($file->getRealPath()));
+                $photoPath = "data:{$mime};base64,{$encoded}";
             }
 
             $attendance = Attendance::create([
@@ -159,12 +158,11 @@ class AttendanceController extends Controller
                 throw ValidationException::withMessages(['attendance' => 'Anda sudah melakukan absen pulang hari ini.']);
             }
             $photoPath = null;
-            try {
-                $photoPath = $request->file('photo')->store('attendance/check-out', config('filesystems.default'));
-            } catch (\Throwable $e) {
-                $mime = $request->file('photo')->getMimeType() ?: 'image/jpeg';
-                $data = base64_encode(file_get_contents($request->file('photo')->getRealPath()));
-                $photoPath = "data:{$mime};base64,{$data}";
+            if ($request->hasFile('photo')) {
+                $file = $request->file('photo');
+                $mime = $file->getMimeType() ?: 'image/jpeg';
+                $encoded = base64_encode(file_get_contents($file->getRealPath()));
+                $photoPath = "data:{$mime};base64,{$encoded}";
             }
 
             $attendance->update([

@@ -98,10 +98,12 @@
                             <span class="text-sm text-neglasari-text-secondary">IP Address</span>
                             <span class="text-sm font-semibold text-neglasari-text">{{ $attendance->check_in_ip ?? '-' }}</span>
                         </div>
-                        @if($attendance->check_in_photo_path)
+                        @if($attendance->check_in_photo_url)
                             <div class="mt-4">
-                                <p class="text-sm text-neglasari-text-secondary mb-2">Foto Absen Masuk</p>
-                                <img src="{{ Storage::url($attendance->check_in_photo_path) }}" alt="Foto Absen Masuk" class="w-full rounded-lg border border-neglasari-border">
+                                <p class="text-sm text-neglasari-text-secondary mb-2 font-semibold">Foto Absen Masuk</p>
+                                <a href="{{ $attendance->check_in_photo_url }}" target="_blank" class="block">
+                                    <img src="{{ $attendance->check_in_photo_url }}" alt="Foto Absen Masuk" class="w-full max-h-64 object-cover rounded-lg border border-neglasari-border hover:opacity-90 transition">
+                                </a>
                             </div>
                         @endif
                     </div>
@@ -147,10 +149,12 @@
                             <span class="text-sm text-neglasari-text-secondary">IP Address</span>
                             <span class="text-sm font-semibold text-neglasari-text">{{ $attendance->check_out_ip ?? '-' }}</span>
                         </div>
-                        @if($attendance->check_out_photo_path)
+                        @if($attendance->check_out_photo_url)
                             <div class="mt-4">
-                                <p class="text-sm text-neglasari-text-secondary mb-2">Foto Absen Pulang</p>
-                                <img src="{{ Storage::url($attendance->check_out_photo_path) }}" alt="Foto Absen Pulang" class="w-full rounded-lg border border-neglasari-border">
+                                <p class="text-sm text-neglasari-text-secondary mb-2 font-semibold">Foto Absen Pulang</p>
+                                <a href="{{ $attendance->check_out_photo_url }}" target="_blank" class="block">
+                                    <img src="{{ $attendance->check_out_photo_url }}" alt="Foto Absen Pulang" class="w-full max-h-64 object-cover rounded-lg border border-neglasari-border hover:opacity-90 transition">
+                                </a>
                             </div>
                         @endif
                     </div>

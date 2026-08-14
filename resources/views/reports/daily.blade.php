@@ -6,16 +6,18 @@
 <div class="container mx-auto px-4 py-6">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-neglasari-dark">Laporan Harian Absensi</h1>
-        <div class="flex gap-2">
-            <a href="{{ route('admin.reports.export', array_merge(request()->query(), ['type' => 'daily', 'format' => 'xlsx'])) }}" 
-               class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
-               Export Excel
-            </a>
-            <a href="{{ route('admin.reports.export', array_merge(request()->query(), ['type' => 'daily', 'format' => 'pdf'])) }}" 
-               class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
-               Export PDF
-            </a>
-        </div>
+        @if(auth()->user()?->hasRole(['Admin', 'Super Admin', 'Admin Desa']))
+            <div class="flex gap-2">
+                <a href="{{ route('admin.reports.export', array_merge(request()->query(), ['type' => 'daily', 'format' => 'xlsx'])) }}" 
+                   class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition text-sm font-semibold">
+                   Export Excel
+                </a>
+                <a href="{{ route('admin.reports.export', array_merge(request()->query(), ['type' => 'daily', 'format' => 'pdf'])) }}" 
+                   class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition text-sm font-semibold">
+                   Export PDF
+                </a>
+            </div>
+        @endif
     </div>
 
     <div class="bg-white rounded-lg shadow p-6 mb-6">

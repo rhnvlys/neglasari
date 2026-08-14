@@ -106,4 +106,26 @@ class Attendance extends Model
     {
         return $this->hasMany(AttendanceCorrection::class);
     }
+
+    public function getCheckInPhotoUrlAttribute(): ?string
+    {
+        if (!$this->check_in_photo_path) {
+            return null;
+        }
+        if (str_starts_with($this->check_in_photo_path, 'data:') || str_starts_with($this->check_in_photo_path, 'http')) {
+            return $this->check_in_photo_path;
+        }
+        return \Illuminate\Support\Facades\Storage::url($this->check_in_photo_path);
+    }
+
+    public function getCheckOutPhotoUrlAttribute(): ?string
+    {
+        if (!$this->check_out_photo_path) {
+            return null;
+        }
+        if (str_starts_with($this->check_out_photo_path, 'data:') || str_starts_with($this->check_out_photo_path, 'http')) {
+            return $this->check_out_photo_path;
+        }
+        return \Illuminate\Support\Facades\Storage::url($this->check_out_photo_path);
+    }
 }

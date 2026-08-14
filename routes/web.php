@@ -97,7 +97,6 @@ Route::middleware(['auth', 'active.user', 'role:Anggota|Pegawai|Kepala Desa'])->
 
     // Riwayat Laporan Pribadi Anggota
     Route::get('/riwayat-laporan', [\App\Http\Controllers\Reports\AttendanceReportController::class, 'history'])->name('reports.history');
-    Route::get('/riwayat-laporan/export', [\App\Http\Controllers\Reports\AttendanceExportController::class, 'export'])->name('reports.export');
 
     // Pengajuan Izin/Cuti Anggota
     Route::get('/pengajuan', [LeaveRequestController::class, 'myRequests'])->name('leave-requests.index');
@@ -118,7 +117,6 @@ Route::middleware(['auth', 'active.user', 'role:Anggota|Pegawai|Kepala Desa'])->
     Route::post('/absensi/pulang', [AttendanceController::class, 'checkout'])->name('attendance.checkout.store');
 
     Route::get('/riwayat-laporan', [\App\Http\Controllers\Reports\AttendanceReportController::class, 'history'])->name('reports.history');
-    Route::get('/riwayat-laporan/export', [\App\Http\Controllers\Reports\AttendanceExportController::class, 'export'])->name('reports.export');
 
     Route::get('/pengajuan', [LeaveRequestController::class, 'myRequests'])->name('leave-requests.index');
     Route::get('/pengajuan/tambah', [LeaveRequestController::class, 'create'])->name('leave-requests.create');

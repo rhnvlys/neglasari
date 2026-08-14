@@ -101,6 +101,26 @@ class AttendanceReportTest extends TestCase
         ]);
     }
 
+    public function test_employee_cannot_access_export_route(): void
+    {
+        $employee = $this->createUserWithRole('Anggota');
+
+        $this->actingAs($employee)
+            ->get(route('admin.reports.export', ['type' => 'daily', 'format' => 'xlsx']))
+            ->assertForbidden();
+    }
+
+    public function test_attendance_photo_url_accessor_handles_data_uri_and_storage_path(): void
+    {
+        $attendance = new \App\Models\Attendance([
+            'check_in_photo_path' => 'data:image/jpeg;base64,12345',
+            'check_out_photo_path' => 'attendance/check-out/photo.jpg',
+        ]);
+
+        $this->assertEquals('data:image/jpeg;base64,12345', $attendance->check_in_photo_url);
+        $this->assertStringContainsString('attendance/check-out/photo.jpg', $attendance->check_out_photo_url);
+    }
+
     private function createUserWithRole(string $role): User
     {
         $position = Position::create([

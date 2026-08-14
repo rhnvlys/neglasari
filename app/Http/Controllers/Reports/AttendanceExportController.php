@@ -28,11 +28,15 @@ class AttendanceExportController extends Controller
         $format = $request->validated('format');
         $filter = AttendanceReportFilterData::fromRequest($request->validated());
 
-        if ($format === 'xlsx' && !$request->user()->can('export attendance reports excel') && !$request->user()->can('export own attendance report')) {
+        if (!$request->user() || !$request->user()->hasRole(['Admin', 'Super Admin', 'Admin Desa'])) {
+            abort(403, 'Fitur ekspor hanya diperuntukkan bagi Admin.');
+        }
+
+        if ($format === 'xlsx' && !$request->user()->can('export attendance reports excel')) {
             abort(403);
         }
 
-        if ($format === 'pdf' && !$request->user()->can('export attendance reports pdf') && !$request->user()->can('export own attendance report')) {
+        if ($format === 'pdf' && !$request->user()->can('export attendance reports pdf')) {
             abort(403);
         }
 
